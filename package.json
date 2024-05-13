@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
+    "db": "^6.0.3",
     "express": "^4.19.2",
     "mongoose": "^8.3.4"
   }
