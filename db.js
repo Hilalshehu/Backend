@@ -1,12 +1,16 @@
-const {mongoClient} = require('mongodb');
+const mongoose = require('mongoose');
 
-//mongoClient.connect('', (err, db) => {})
-var db;
-try {
-    const client = new MongoClient("mongodb+srv://hilalw:HIlal1234@cluster0.zv5tubv.mongodb.net/BackendTest");
-    db = client.db("BackendTest");
-    console.log("Connected to database.");
-  } catch {
-    console.log("Failed to connect to database.");
+async function connectToDatabase() {
+  try {
+    await mongoose.connect('mongodb+srv://hilalw:HIlal1234@cluster0.zv5tubv.mongodb.net/Backend', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("Connected to MongoDB.");
+  } catch (error) {
+    console.error("Failed to connect to MongoDB", error);
+    process.exit(1); // Exit the process with failure
   }
- module.exports = db;
+}
+
+module.exports = connectToDatabase;

@@ -1,26 +1,31 @@
-const express = require('express');
-const mongoose = require('mongoose');
 
+const express = require('express');
+const cors = require('cors');
+const connectToDatabase = require('./db'); // Import the database connection function
 
 const app = express();
-var cors = require('cors')
-// var app = express();
+// Middleware
+app.use(cors());
+app.use(express.json());
 
-app.use(cors())
-app.use(express.json())
+// Connect to MongoDB and start the server
+connectToDatabase().then(() => {
+  // Routes
+  const lessonsRouter = require('./routes/lessons');
+  app.use("/lessons", lessonsRouter);
 
-//mongoose.connect('mongodb+srv://hilalw:HIlal1234@cluster0.zv5tubv.mongodb.net/Backend')
+  const ordersRouter = require('./routes/orders');
+  app.use("/orders", ordersRouter);
 
+  // Default route
+  app.get("/", (req, res) => {
+    res.send("This is very hard");
+  });
 
-app.get("/", (req, res) => {
-
-    var lessonsRouter = require('./routes/lessons')
-app.use("/lessons", lessonsRouter)
-
-var ordersRouter = require('./routes/orders')
-app.use("/orders", ordersRouter)
-
-})
-app.listen(4000, () => {
-console.log("server is Running")
-})
+  // Start the server
+  app.listen(5000, () => {
+    console.log("Server is running on port 5000");
+  });
+}).catch((error) => {
+  console.error("Failed to start server", error);
+});
