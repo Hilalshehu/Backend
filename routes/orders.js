@@ -14,7 +14,7 @@ orders.post("/", function (req, res) {
       { $inc: { spaces: -amount } }
     );
   });
-  console.log(order);
+  console.log(order + "executed");
 });
 
 module.exports = orders;
