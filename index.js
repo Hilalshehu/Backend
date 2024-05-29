@@ -1,12 +1,9 @@
-// Import dependencies modules:
 const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 
-// Create an Express.js instance:
 const app = express();
 
-// Config Express.js
 app.use(express.json());
 app.set('port', 4000);
 app.use((req, res, next) => {
@@ -17,7 +14,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Connect to MongoDB
 let db;
 MongoClient.connect('mongodb+srv://hilalw:HIlal1234@cluster0.zv5tubv.mongodb.net/', (err, client) => {
   if (err) throw err;
@@ -27,7 +23,6 @@ MongoClient.connect('mongodb+srv://hilalw:HIlal1234@cluster0.zv5tubv.mongodb.net
   });
 });
 
-// Define routes
 app.get('/', (req, res, next) => {
   res.send('Select a collection, e.g., /collection/messages');
 });
@@ -136,7 +131,7 @@ app.get('/collection/products/:id/with-lock', async (req, res, next) => {
   }
 });
 
-// Insert the new endpoint for handling orders here
+// New endpoint for handling orders
 app.post('/collection/orders', async (req, res, next) => {
   const { lessons, username, phonenumber } = req.body;
 
@@ -145,14 +140,14 @@ app.post('/collection/orders', async (req, res, next) => {
     const orderResult = await db.collection('orders').insertOne({ lessons, username, phonenumber });
 
     // Update lesson spaces
-    const lessonUpdates = lessons.map(lesson =>
+    const productUpdates = lessons.map(product =>
       db.collection('products').updateOne(
-        { _id: new ObjectID(lesson.id) },
-        { $inc: { spaces: -lesson.quantity } }
+        { _id: new ObjectID(product.id) },
+        { $inc: { spaces: -product.quantity } }
       )
     );
 
-    await Promise.all(lessonUpdates);
+    await Promise.all(productUpdates);
 
     res.send(orderResult.ops[0]);
   } catch (error) {
