@@ -31,7 +31,12 @@ app.param('collectionName', (req, res, next, collectionName) => {
   req.collection = db.collection(collectionName);
   return next();
 });
-
+// Logger Middleware
+app.use((req, res, next) => {
+  var log = `${req.ip} -- ${req.method} ${req.path} ${res.statusCode}"`;
+  console.log(log, req.body);
+  next();
+});
 app.get('/collection/:collectionName', (req, res, next) => {
   const { search, searchField, sort } = req.query;
   let query = {};
